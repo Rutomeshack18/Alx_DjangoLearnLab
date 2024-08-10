@@ -1,4 +1,4 @@
-a= Book.objects.get(pk= 1)
-a.title = 'Nineteen Eighty-Four'
-a.save()
+book = Book.objects.get(title='1984')
+book.title = "Nineteen Eighty-Four"
+book.save()
 <!-- Updated -->
