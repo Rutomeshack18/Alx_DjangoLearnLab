@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import login
 
 # Create your views here.
 def list_books(request):
