@@ -7,7 +7,7 @@ from .views import Register
 urlpatterns = [
     path('books/', views.list_books, name='books'),
     path('Library/', views.LibraryDetailView.as_view(), name='Library'),
-    path('registration/', views.Register.as_view(template_name = 'registration/registration.html'), name='register'),
+    path('registration/', views.Register.as_view(template_name = 'registration/register.html'), name='register'),
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name = 'registration/logout.html'), name='logout'),
 ]
