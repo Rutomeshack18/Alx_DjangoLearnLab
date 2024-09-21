@@ -21,14 +21,14 @@ class BookTestCase(APITestCase):
         self.assertEqual(Book.objects.get().title, 'River and the Source')
     
     def test_update_book(self):
-        url = '/api/books/update'
+        url = '/api/books/update/'
         data = {'title': 'River Between', 'publication_year': 2021, 'author': self.author.id}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Book.objects.get().title, 'River Between')
 
     def test_delete_book(self):
-        url= '/api/books{book_id}/delete'
+        url= '/api/books{book_id}/delete/'
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Book.objects.count(), 0)
