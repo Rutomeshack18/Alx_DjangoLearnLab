@@ -81,7 +81,7 @@ class DeletePost(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         return redirect('posts') 
     
-class AddComment(LoginRequiredMixin, View):
+class CommentCreateView(LoginRequiredMixin, View):
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         form = CommentForm(request.POST)
@@ -92,7 +92,7 @@ class AddComment(LoginRequiredMixin, View):
             comment.save()
         return redirect('postdetail', pk=post.pk)
     
-class UpdateComment(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     template_name = 'blog/update_comment.html'
@@ -104,7 +104,7 @@ class UpdateComment(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def handle_no_permission(self):
         return redirect('postdetail', pk=self.object.post.pk)
     
-class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
     template_name = 'blog/delete_comment.html'
 
