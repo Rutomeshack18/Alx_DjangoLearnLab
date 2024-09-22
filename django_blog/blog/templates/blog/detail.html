@@ -8,4 +8,40 @@
         <p><a href="{% url 'update' post.pk %}">Edit Post</a></p>
     {% endif %}
 </div>
+
+<hr>
+
+<!-- Comment section -->
+<h2>Comments</h2>
+<div>
+    {% for comment in post.comments.all %}
+        <div>
+            <strong>{{ comment.author }}</strong>
+            <p>{{ comment.content }}</p>
+            <p>{{ comment.created_at }}</p>
+            <!-- Edit and Delete buttons for the comment author -->
+            {% if comment.author == request.user %}
+                <a href="{% url 'update_comment' post.id comment.id %}">Edit</a>
+                <a href="{% url 'delete_comment' post.id comment.id %}">Delete</a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+</div>
+
+<hr>
+
+<!-- Add a comment form (visible only to authenticated users) -->
+{% if user.is_authenticated %}
+    <h3>Leave a Comment:</h3>
+    <form method="POST" action="{% url 'create_comment' post.id %}">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
+{% endif %}
+
 {% endblock %}
