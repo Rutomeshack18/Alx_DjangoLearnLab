@@ -11,8 +11,8 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('profile/', profile, name='profile'),
     path('posts/', PostList.as_view(), name = 'posts'),
-    path('posts/<int:pk>/', PostDetail.as_view(), name = 'postdetail'), 
-    path('posts/new/', CreatePost.as_view(), name = 'create'),
-    path('posts/<int:pk>/edit/', UpdatePost.as_view(), name = 'update'),
-    path('posts/<int:pk>/delete/', DeletePost.as_view(), name = 'delete'),
+    path('post/<int:pk>/', PostDetail.as_view(), name = 'postdetail'), 
+    path('post/new/', CreatePost.as_view(), name = 'create'),
+    path('post/<int:pk>/update/', UpdatePost.as_view(), name = 'update'),
+    path('post/<int:pk>/delete/', DeletePost.as_view(), name = 'delete'),
 ]
