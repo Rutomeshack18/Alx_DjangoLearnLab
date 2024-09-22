@@ -13,7 +13,7 @@ class CustomUserCreationForm(UserCreationForm):
 class PostCreationForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
         widgets = {
         'content': forms.Textarea( attrs= {'rows': 10, 'cols': 80})
         }

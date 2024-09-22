@@ -12,6 +12,8 @@ from .models import Comment
 from .forms import CommentForm
 from django.views.generic import View
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
+from taggit.models import Tag
 # Create your views here.
 def register(request):
     if request.method == 'POST':
@@ -118,3 +120,27 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def handle_no_permission(self):
         return redirect('postdetail', pk=self.object.post.pk)
+    
+def search(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)  
+        ).distinct()
+    return render(request, 'blog/search_results.html', {'results': results, 'query': query})
+
+class PostsByTagView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__slug=self.kwargs.get('tag_slug'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = Tag.objects.get(slug=self.kwargs.get('tag_slug'))
+        return context
