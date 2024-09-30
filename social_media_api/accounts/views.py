@@ -10,7 +10,10 @@ def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()  # Save the user using the serializer
-        token = Token.objects.create(user=user)  # Create a token for the new user
+        
+        # Explicitly create a token for the new user
+        token = Token.objects.create(user=user)  # Create a new token for the user
+        
         return Response({'token': token.key}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
