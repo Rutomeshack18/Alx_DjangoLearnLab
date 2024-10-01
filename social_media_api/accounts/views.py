@@ -9,9 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from posts.serializers import PostSerializer
 from rest_framework import generics
 from posts.models import Post
-from rest_framework.views import APIView
 from rest_framework import generics, permissions, status
-
+from rest_framework.views import APIView
 @api_view(['POST'])
 def register(request):
     serializer = UserSerializer(data=request.data)
@@ -37,7 +36,7 @@ def login(request):
 
 User = get_user_model()
 
-class FollowUserAPIView(APIView):
+class FollowUserAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
@@ -48,7 +47,7 @@ class FollowUserAPIView(APIView):
         except User.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-class UnfollowUserAPIView(APIView):
+class UnfollowUserAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
@@ -59,12 +58,10 @@ class UnfollowUserAPIView(APIView):
         except User.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-class FeedView(generics.ListAPIView):
-    serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+class ListUsersAPIView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        user = self.request.user
-        # Get the posts from users that the current user follows
-        following = user.following.all()
-        return Post.objects.filter(author__in=following).order_by('-created_at')
+    def get(self, request):
+        users = User.objects.all()  # Retrieve all users
+        user_list = [{"id": user.id, "username": user.username} for user in users]
+        return Response(user_list, status=status.HTTP_200_OK)
