@@ -11,6 +11,7 @@ from rest_framework import generics
 from posts.models import Post
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
+from .models import CustomUser
 @api_view(['POST'])
 def register(request):
     serializer = UserSerializer(data=request.data)
@@ -41,10 +42,10 @@ class FollowUserAPIView(generics.GenericAPIView):
 
     def post(self, request, user_id):
         try:
-            user_to_follow = User.objects.get(id=user_id)
-            request.user.following.add(user_to_follow)  # Add to following
+            user_to_follow = CustomUser.objects.get(id=user_id)  # Explicitly using CustomUser
+            request.user.following.add(user_to_follow)
             return Response({"message": "You are now following this user."}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 class UnfollowUserAPIView(generics.GenericAPIView):
@@ -52,16 +53,17 @@ class UnfollowUserAPIView(generics.GenericAPIView):
 
     def post(self, request, user_id):
         try:
-            user_to_unfollow = User.objects.get(id=user_id)
-            request.user.following.remove(user_to_unfollow)  # Remove from following
+            user_to_unfollow = CustomUser.objects.get(id=user_id)  # Explicitly using CustomUser
+            request.user.following.remove(user_to_unfollow)
             return Response({"message": "You have unfollowed this user."}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 class ListUsersAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        users = User.objects.all()  # Retrieve all users
+        # Explicitly use CustomUser.objects.all()
+        users = CustomUser.objects.all()  
         user_list = [{"id": user.id, "username": user.username} for user in users]
         return Response(user_list, status=status.HTTP_200_OK)
